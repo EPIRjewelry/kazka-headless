@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.wrangler/
+*.sqlite*
+.dev.vars
+.env
+.env.local
+.env.*.local
+generated/
+*.log
+.DS_Store
