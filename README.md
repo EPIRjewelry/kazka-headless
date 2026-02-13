@@ -37,10 +37,12 @@ npm run deploy:cf
 
 Skopiuj `.dev.vars.example` do `.dev.vars` (gitignored) i uzupełnij:
 
-- `SESSION_SECRET`
+- `SESSION_SECRET` – wymagany, użyj długiego losowego stringa w produkcji
 - `PUBLIC_STOREFRONT_API_TOKEN` / `PRIVATE_STOREFRONT_API_TOKEN`
 - `PUBLIC_STORE_DOMAIN`, `PUBLIC_STOREFRONT_ID`, `SHOP_ID`
 - `PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID`
+
+W produkcji: ustaw `SESSION_SECRET` w Cloudflare Dashboard (Workers → Settings → Variables) lub wrangler secrets.
 
 ## GitHub Actions
 
@@ -60,7 +62,9 @@ HYDROGEN_PAGES_URL=https://hydrogen-kazka.krzysztofdzugaj.workers.dev
 
 ## Nowe repozytorium GitHub
 
-1. Utwórz repo `kazka-headless` (np. w EPIRjewelry)
-2. `git remote add origin <url>`
-3. `git add . && git commit -m "Initial: Hydrogen Kazka na Cloudflare Workers"`
-4. `git push -u origin main`
+1. Utwórz repo `kazka-headless` na GitHubie (np. https://github.com/EPIRjewelry/kazka-headless)
+2. `git remote add origin <url>` *(już ustawione: EPIRjewelry/kazka-headless)*
+3. `git add . && git commit -m "Initial: Hydrogen Kazka na Cloudflare Workers"` *(wykonane)*
+4. `git push -u origin main` *(wykonaj po utworzeniu repo)*
+
+**Sekrety GitHub Actions:** Settings → Secrets and variables → Actions → dodaj `CLOUDFLARE_API_TOKEN` i `CLOUDFLARE_ACCOUNT_ID`.

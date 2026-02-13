@@ -76,7 +76,7 @@ export default {
 
       const handleRequest = createRequestHandler({
         build: remixBuild,
-        mode: process.env.NODE_ENV as 'development' | 'production',
+        mode: ('production' as const),
         getLoadContext: () => ({
           session,
           waitUntil,
@@ -99,19 +99,31 @@ export default {
         if (assetResponse.status !== 404) return assetResponse;
       }
 
-      const response = await handleRequest(request);
+      const response = await handleRequest(request, env, executionContext);
 
       if (session.isPending) {
         response.headers.set('Set-Cookie', await session.commit());
       }
 
       if (response.status === 404) {
-        return storefrontRedirect({request, response, storefront});
+        try {
+          return storefrontRedirect({request, response, storefront});
+        } catch (redirectError) {
+          console.error('storefrontRedirect failed', redirectError);
+          return response;
+        }
       }
 
       return response;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error(error);
+      const stack = error instanceof Error ? error.stack : String(error);
+      if (env?.NODE_ENV !== 'production' && stack) {
+        return new Response(stack, {
+          status: 500,
+          headers: {'Content-Type': 'text/plain'},
+        });
+      }
       return new Response('An unexpected error occurred', {status: 500});
     }
   },

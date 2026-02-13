@@ -9,9 +9,9 @@ export function GenericError({
 }) {
   const heading = `Something’s wrong here.`;
   let description = `We found an error while loading this page.`;
+  const isDev = import.meta.env.DEV;
 
-  // TODO hide error in prod?
-  if (error) {
+  if (error && isDev) {
     description += `\n${error.message}`;
     // eslint-disable-next-line no-console
     console.error(error);
@@ -23,7 +23,7 @@ export function GenericError({
         <Text width="narrow" as="p">
           {description}
         </Text>
-        {error?.stack && (
+        {isDev && error?.stack && (
           <pre
             style={{
               padding: '2rem',

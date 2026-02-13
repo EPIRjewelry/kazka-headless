@@ -14,6 +14,7 @@ declare global {
 
   interface Env {
     ASSETS?: {fetch: (req: Request) => Promise<Response>};
+    NODE_ENV?: 'production' | 'development';
     SESSION_SECRET: string;
     PUBLIC_STOREFRONT_API_TOKEN: string;
     PRIVATE_STOREFRONT_API_TOKEN: string;
