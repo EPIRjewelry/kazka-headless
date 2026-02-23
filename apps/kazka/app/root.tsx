@@ -11,6 +11,7 @@ import styles from './styles/app.css';
 import tailwind from './styles/tailwind-build.css';
 import favicon from '../public/favicon.svg';
 import {Layout, CartHeader, CartDrawer} from '@epir/ui';
+import {ChatWidget} from '~/components/ChatWidget';
 import {Seo, Storefront} from '@shopify/hydrogen';
 import type {LinksFunction, LoaderArgs} from '@remix-run/cloudflare';
 import {CART_QUERY} from '~/queries/cart';
@@ -32,8 +33,10 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export async function loader({context}: LoaderArgs) {
+export async function loader({context, request}: LoaderArgs) {
   const cartId = await context.session.get('cartId');
+  const WORKER_CHAT_URL = 'https://epir-chat-worker.krzysztofdzugaj.workers.dev/api/chat';
+  const chatApiUrl = WORKER_CHAT_URL;
   const filter = context.env.COLLECTION_FILTER;
   const allowedHandles = filter
     ? filter.split(',').map((h: string) => h.trim()).filter(Boolean)
@@ -52,10 +55,15 @@ export async function loader({context}: LoaderArgs) {
       )
     : collectionsResult.collections.nodes;
 
+  const useAgentMode = !!context.env.PUBLIC_CHAT_API_URL;
+
   return defer({
     layout,
     cart: cartId ? getCart(context.storefront, cartId) : undefined,
     collections: {nodes},
+    chatApiUrl,
+    cartId,
+    useAgentMode,
   });
 }
 
@@ -82,6 +90,7 @@ export default function App() {
   return (
     <html lang="pl">
       <head>
+        {/* TODO: If chat runs on separate Worker, add its domain to CSP via createContentSecurityPolicy from @shopify/hydrogen */}
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Seo />
@@ -102,6 +111,11 @@ export default function App() {
         >
           <Outlet />
         </Layout>
+        <ChatWidget
+          chatApiUrl={data.chatApiUrl}
+          cartId={data.cartId}
+          useAgentMode={data.useAgentMode}
+        />
         <ScrollRestoration />
         <Scripts />
       </body>

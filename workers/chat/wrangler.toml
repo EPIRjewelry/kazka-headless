@@ -1,0 +1,16 @@
+name = "epir-chat-worker"
+main = "src/server.ts"
+account_id = "73283c24dc79f92edef30dcdbc98f230"
+compatibility_date = "2026-02-23"
+compatibility_flags = ["nodejs_compat"]
+
+[ai]
+binding = "AI"
+
+[[durable_objects.bindings]]
+name = "ChatAgent"
+class_name = "ChatAgent"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ChatAgent"]
