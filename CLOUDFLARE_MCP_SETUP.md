@@ -56,12 +56,14 @@ W sekcji **Permissions** upewnij się, że token ma:
 
 W pliku `mcp.json` znajdź sekcję `"mcpServers"`. Dodaj nowy wpis **przed** zamykającym `}`:
 
+> **Security:** Never commit real Cloudflare API tokens. Use env vars, Cloudflare/GitHub secrets, or a local-only `mcp.json` (not tracked in git).
+
 ```json
 "cloudflare-dns": {
   "command": "npx",
   "args": ["-y", "@thelord/mcp-cloudflare"],
   "env": {
-    "CLOUDFLARE_API_TOKEN": "XbAUy7Y9r46H06GqAlNs8cACzZDdHvQxYx0t6-LJ",
+    "CLOUDFLARE_API_TOKEN": "YOUR_CLOUDFLARE_API_TOKEN",
     "CLOUDFLARE_ZONE_ID": "TWOJ_ZONE_ID"
   }
 }
@@ -72,7 +74,7 @@ W pliku `mcp.json` znajdź sekcję `"mcpServers"`. Dodaj nowy wpis **przed** zam
 2. Wybierz domenę **epirbizuteria.pl**
 3. W prawym panelu (Overview) znajdź **Zone ID** – skopiuj (np. `abc123def456...`)
 
-**Uwaga:** Zastąp `CLOUDFLARE_API_TOKEN` swoim tokenem (tym samym co w cloudflare-observability), jeśli jest inny. Zastąp `TWOJ_ZONE_ID` Zone ID domeny epirbizuteria.pl.
+**Uwaga:** Zastąp placeholder `YOUR_CLOUDFLARE_API_TOKEN` prawdziwym tokenem tylko lokalnie (np. tym samym co w cloudflare-observability). Zastąp `TWOJ_ZONE_ID` Zone ID domeny epirbizuteria.pl.
 
 ### Krok 2.3: Pełny przykład `mcp.json`
 
@@ -91,7 +93,7 @@ Po dodaniu sekcja `mcpServers` może wyglądać tak:
       "command": "npx",
       "args": ["-y", "@thelord/mcp-cloudflare"],
       "env": {
-        "CLOUDFLARE_API_TOKEN": "XbAUy7Y9r46H06GqAlNs8cACzZDdHvQxYx0t6-LJ",
+        "CLOUDFLARE_API_TOKEN": "YOUR_CLOUDFLARE_API_TOKEN",
         "CLOUDFLARE_ZONE_ID": "TWOJ_ZONE_ID"
       }
     }
